@@ -29,7 +29,7 @@ server.get('/', (req, res) => {
 
 // ========================PROJECTS ENDPOINTS=========================
 
-// Add GET ROUTE HANDLER to access the users
+// Add GET ROUTE HANDLER to access the projects
 server.get('/api/projects', (req, res) => {
   projects
     .get()
@@ -39,6 +39,27 @@ server.get('/api/projects', (req, res) => {
      })
     .catch(err => res.status(500).send({ error: "All projects information could not be retrieved." }));
 });
+
+//Add POST ROUTE HANDLER to add a project
+server.post('/api/projects', (req, res) => {
+  // Check that name and description is present. If not return error message.
+  if(!req.body.name || !req.body.description) {
+    return res.status(400).send({ errorMessage: "Please provide name and a description for this project." });
+    }
+  else if(req.body.name.length > 128 && req.body.description ) {
+    return res.status(400).send({error: " User name must be less than 128 characters"})
+  }
+  const { name, description } = req.body;
+  const newProject = { name, description };
+  projects
+    .insert(newProject)
+    .then(newProject => {
+        console.log(newProject);
+        res.status(201).json(newProject);
+      })
+    .catch(err => res.status(500).send({ error: "There was an error while saving a project to the database" }));
+
+  });
 
 // Call server.listen w/ a port of 5500
 server.listen(port, () =>
