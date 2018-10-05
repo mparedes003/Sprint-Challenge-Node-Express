@@ -96,6 +96,19 @@ server.put('/api/projects/:id', async (req, res) => {
  }
 });
 
+// ========================ACTIONS ENDPOINTS=========================
+
+// Add GET ROUTE HANDLER to access the actions
+server.get('/api/actions', (req, res) => {
+  actions
+    .get()
+    .then( allActions => {
+      console.log('\n** all actions **', allActions);
+      res.status(200).json(allActions);
+     })
+    .catch(err => res.status(500).send({ error: "All actions information could not be retrieved." }));
+});
+
 // Call server.listen w/ a port of 5500
 server.listen(port, () =>
   console.log(`\n=== API running on port ${port} ===\n`)
