@@ -109,7 +109,39 @@ server.get('/api/actions', (req, res) => {
     .catch(err => res.status(500).send({ error: "All actions information could not be retrieved." }));
 });
 
+//Add POST ROUTE HANDLER to add a action
+server.post('/api/actions', (req, res) => {
+  // Check that project_id, description, and notes are present. If not return error message.
+  if(!req.body.project_id || !req.body.description || !req.body.notes) {
+    return res.status(400).send({ errorMessage: "Please provide a project_id, description, and notes for this action." });
+   } 
+  
+  // if(req.body.description.length > 128) {
+  //   return res.status(400).send({error: " Action description must be less than 128 characters"})
+  // }
 
+  // Next, check if the project exists in db. If not return error message.
+  // projects
+  //   .get(req.body.project_id)
+  //   .then(response => {
+  //     console.log(response)
+  //     return 
+      // if(response === undefined) {
+      //   return res.status(400).send({message: "project_id does not exist"});
+      // } 
+    //  })
+
+  // When both tests pass, submit request
+  const { project_id, description, notes } = req.body;
+  const newAction = { project_id, description, notes };
+  actions
+    .insert(newAction)
+    .then(newAction => {
+        // console.log(newAction);
+        res.status(201).json(newAction);
+      })
+    .catch(err => res.status(500).send({ error: "There was an error while saving the action to the database" }));
+});
 
 //Add DELETE ROUTE HANDLER to delete a action
 server.delete("/api/actions/:id", async (req, res) => {
