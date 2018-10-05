@@ -75,6 +75,27 @@ server.delete("/api/projects/:id", async (req, res) => {
   }
 });
 
+//Add PUT ROUTE HANDLER to update a project's name and description
+server.put('/api/projects/:id', async (req, res) => {
+  if (!req.body.name || !req.body.description) {
+    return res.status(400).send({ errorMessage: "Please provide name and description for the user." });
+   } try {
+    await projects.update(req.params.id, req.body);
+    try {
+    const project = await projects.get(req.params.id);
+    if (project.length === 0) {
+      return res.status(404).send({ message: "The project with the specified ID does not exist." });
+    } else {
+      return res.status(200).json(project);
+    }
+   } catch (error) {
+      return res.status(500).send({ error: "The project information could not be modified." });
+   }
+  } catch (error) {
+    return res.status(500).send({ error: "The project information could not be modified." });
+ }
+});
+
 // Call server.listen w/ a port of 5500
 server.listen(port, () =>
   console.log(`\n=== API running on port ${port} ===\n`)
