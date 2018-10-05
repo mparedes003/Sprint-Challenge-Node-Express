@@ -61,6 +61,20 @@ server.post('/api/projects', (req, res) => {
 
   });
 
+  //Add DELETE ROUTE HANDLER to delete a project
+server.delete("/api/projects/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const project = await projects.remove(id);
+    if (project === 0) {
+      return res.status(404).json({ message: "The project with the specified ID does not exist." });
+    }
+    res.status(200).json(project);
+  } catch (error) {
+    res.status(500).json({ error: "The project could not be removed" });
+  }
+});
+
 // Call server.listen w/ a port of 5500
 server.listen(port, () =>
   console.log(`\n=== API running on port ${port} ===\n`)
