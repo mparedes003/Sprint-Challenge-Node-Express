@@ -117,19 +117,8 @@ server.post('/api/actions', (req, res) => {
    } 
   
   if(req.body.description.length > 128) {
-    return res.status(400).send({error: " Action description must be less than 128 characters"})
+    return res.status(400).send({error: " Action description must be less than 128 characters"});
   }
-
-  // Next, check if the project exists in db. If not return error message.
-  // projects
-  //   .get(req.body.project_id)
-  //   .then(response => {
-  //     console.log(response)
-  //     return 
-      // if(response === undefined) {
-      //   return res.status(400).send({message: "project_id does not exist"});
-      // } 
-    //  })
 
   // When both tests pass, submit request
   const { project_id, description, notes } = req.body;
