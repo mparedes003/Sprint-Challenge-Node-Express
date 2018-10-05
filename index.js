@@ -109,6 +109,8 @@ server.get('/api/actions', (req, res) => {
     .catch(err => res.status(500).send({ error: "All actions information could not be retrieved." }));
 });
 
+
+
 //Add DELETE ROUTE HANDLER to delete a action
 server.delete("/api/actions/:id", async (req, res) => {
   try {
@@ -121,6 +123,27 @@ server.delete("/api/actions/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "The action could not be removed" });
   }
+});
+
+//Add PUT ROUTE HANDLER to update an action's project_id, description, and notes
+server.put('/api/actions/:id', async (req, res) => {
+  if (!req.body.project_id || !req.body.description || !req.body.notes) {
+    return res.status(400).send({ errorMessage: "Please provide a project_id, description, and notes for this action." });
+   } try {
+    await actions.update(req.params.id, req.body);
+    try {
+    const action = await actions.get(req.params.id);
+    if (action.length === 0) {
+      return res.status(404).send({ message: "The action with the specified ID does not exist." });
+    } else {
+      return res.status(200).json(action);
+    }
+   } catch (error) {
+      return res.status(500).send({ error: "The action information could not be modified." });
+   }
+  } catch (error) {
+    return res.status(500).send({ error: "The action information could not be modified." });
+ }
 });
 
 // Call server.listen w/ a port of 5500
