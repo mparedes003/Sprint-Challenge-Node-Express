@@ -116,9 +116,9 @@ server.post('/api/actions', (req, res) => {
     return res.status(400).send({ errorMessage: "Please provide a project_id, description, and notes for this action." });
    } 
   
-  // if(req.body.description.length > 128) {
-  //   return res.status(400).send({error: " Action description must be less than 128 characters"})
-  // }
+  if(req.body.description.length > 128) {
+    return res.status(400).send({error: " Action description must be less than 128 characters"})
+  }
 
   // Next, check if the project exists in db. If not return error message.
   // projects
