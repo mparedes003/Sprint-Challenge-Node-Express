@@ -109,6 +109,20 @@ server.get('/api/actions', (req, res) => {
     .catch(err => res.status(500).send({ error: "All actions information could not be retrieved." }));
 });
 
+//Add DELETE ROUTE HANDLER to delete a action
+server.delete("/api/actions/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const action = await actions.remove(id);
+    if (action === 0) {
+      return res.status(404).json({ message: "The action with the specified ID does not exist." });
+    }
+    res.status(200).json(action);
+  } catch (error) {
+    res.status(500).json({ error: "The action could not be removed" });
+  }
+});
+
 // Call server.listen w/ a port of 5500
 server.listen(port, () =>
   console.log(`\n=== API running on port ${port} ===\n`)
